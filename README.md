@@ -4,6 +4,7 @@ Hobby project exploring tree traversal in Rust using iterators
 ## Demo
 
 ```rust
+use itertree;
 // Each row is 
 // [node idx, <left child idx>, <right child idx>, <contents>]
 // In the example below, the `contents` is simply the node index
