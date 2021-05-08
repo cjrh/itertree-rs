@@ -2,15 +2,15 @@
 #![warn(unused_imports)]
 
 #[derive(Debug)]
-pub struct Node {
-    left: Option<Box<Node>>,
-    right: Option<Box<Node>>,
-    pub contents: u32,
+pub struct Node<'a, T> {
+    left: Option<Box<Node<'a, T>>>,
+    right: Option<Box<Node<'a, T>>>,
+    pub contents: &'a T,
 }
 
-impl Node {
-    pub fn new(arr: &[[i32; 3]]) -> Node {
-        let [idx, left, right] = arr[0];
+impl<'a, T> Node<'a, T> {
+    pub fn new(arr: &[(i32, i32, i32, T)]) -> Node<T> {
+        let (idx, left, right, contents) = &arr[0];
         let l = match left {
             -1 => None,
             i => Some(Box::new(Node::new(&arr[(i - idx) as usize..]))),
@@ -20,19 +20,19 @@ impl Node {
             i => Some(Box::new(Node::new(&arr[(i - idx) as usize..]))),
         };
         Node {
-            contents: idx as u32,
+            contents: contents,
             left: l,
             right: r,
         }
     }
 
-    pub fn iter(&self, order: TraversalOrder) -> NodeIterPre {
+    pub fn iter(&self, order: TraversalOrder) -> NodeIterPre<T> {
         NodeIterPre::new(self, order)
     }
 }
 
-impl PartialEq for Node {
-    fn eq(&self, other: &Node) -> bool {
+impl<'a, T> PartialEq for Node<'a, T> {
+    fn eq(&self, other: &Node<T>) -> bool {
         self as *const _ == other as *const _
     }
 }
@@ -44,15 +44,15 @@ pub enum TraversalOrder {
     PostOrder,
 }
 
-pub struct NodeIterPre<'a> {
-    stack: Vec<&'a Node>,
+pub struct NodeIterPre<'a, T> {
+    stack: Vec<&'a Node<'a, T>>,
     order: TraversalOrder,
-    node: Option<&'a Node>,
-    last_visited_node: Option<&'a Node>,
+    node: Option<&'a Node<'a, T>>,
+    last_visited_node: Option<&'a Node<'a, T>>,
 }
 
-impl<'a> NodeIterPre<'a> {
-    fn new(node: &Node, order: TraversalOrder) -> NodeIterPre {
+impl<'a, T> NodeIterPre<'a, T> {
+    fn new(node: &'a Node<'a, T>, order: TraversalOrder) -> NodeIterPre<'a, T> {
         match order {
             TraversalOrder::PreOrder =>
                 NodeIterPre {
@@ -78,7 +78,7 @@ impl<'a> NodeIterPre<'a> {
         }
     }
 
-    fn next_preorder(&mut self) -> Option<&'a Node> {
+    fn next_preorder(&mut self) -> Option<&'a Node<'a, T>> {
         let stack = &mut self.stack;
         match stack.pop() {
             None => None,
@@ -94,7 +94,7 @@ impl<'a> NodeIterPre<'a> {
         }
     }
 
-    fn next_inorder(&mut self) -> Option<&'a Node> {
+    fn next_inorder(&mut self) -> Option<&'a Node<'a, T>> {
         let stack = &mut self.stack;
         let r = loop {
             if self.node.is_some() {
@@ -121,7 +121,7 @@ impl<'a> NodeIterPre<'a> {
         r
     }
 
-    fn next_postorder(&mut self) -> Option<&'a Node> {
+    fn next_postorder(&mut self) -> Option<&'a Node<'a, T>> {
         let r= loop {
             if self.node.is_some() {
                 let n = self.node.unwrap();
@@ -156,10 +156,10 @@ impl<'a> NodeIterPre<'a> {
 
 }
 
-impl<'a> Iterator for NodeIterPre<'a> {
-    type Item = &'a Node;
+impl<'a, T> Iterator for NodeIterPre<'a, T> {
+    type Item = &'a Node<'a, T>;
 
-    fn next(&mut self) -> Option<&'a Node> {
+    fn next(&mut self) -> Option<&'a Node<'a, T>> {
         let r = match self.order {
             TraversalOrder::PreOrder => self.next_preorder(),
             TraversalOrder::InOrder => self.next_inorder(),
@@ -171,15 +171,17 @@ impl<'a> Iterator for NodeIterPre<'a> {
 
 #[allow(dead_code)]
 fn make_tree() {
-    let arr_tree = [[1, 2, 3],
-        [2, 4, 5],
-        [3, 6, -1],
-        [4, 7, -1],
-        [5, -1, -1],
-        [6, 8, 9],
-        [7, -1, -1],
-        [8, -1, -1],
-        [9, -1, -1]];
+    let arr_tree = [
+        (1, 2, 3, 1),
+        (2, 4, 5, 2),
+        (3, 6, -1, 3),
+        (4, 7, -1, 4),
+        (5, -1, -1, 5),
+        (6, 8, 9, 6),
+        (7, -1, -1, 7),
+        (8, -1, -1, 8),
+        (9, -1, -1, 9)
+    ];
 
     let tree = Node::new(&arr_tree);
     println!("{:?}", &tree);
