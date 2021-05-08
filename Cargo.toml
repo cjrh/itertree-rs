@@ -1,5 +1,5 @@
 [package]
-name = "treetraversal"
+name = "itertree"
 description = "Hobby project to experiment with tree traversal using iterators"
 homepage = "https://github.com/cjrh/itertree-rs"
 repository = "https://github.com/cjrh/itertree-rs"
