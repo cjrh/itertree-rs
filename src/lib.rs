@@ -39,8 +39,11 @@ impl<'a, T> PartialEq for Node<'a, T> {
 
 #[derive(Debug)]
 pub enum TraversalOrder {
+    /// Uses: create a copy of the tree. Also prefix expressions like RPN.
     PreOrder,
+    /// Uses: for binary search trees, gives ascending order.
     InOrder,
+    /// Uses: can be used to delete the tree, or parts of it.
     PostOrder,
 }
 
