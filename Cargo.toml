@@ -9,9 +9,9 @@ edition = "2018"
 readme = "README.md"
 license-file = "LICENSE"
 keywords = ["algorithm", "tree"]
-exclude = [
-    ".gitignore",
-    ".github/FUNDING.yml",
+include = [
+    "**/*.rs",
+    "Cargo.toml",
 ]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
