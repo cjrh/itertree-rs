@@ -1,13 +1,11 @@
-#![allow(dead_code)]
-#![allow(unused_imports)]
-use tiny_rng::{Rng, Rand};
-use std::ops::Deref;
+#![warn(dead_code)]
+#![warn(unused_imports)]
 
 #[derive(Debug)]
-struct Node {
+pub struct Node {
     left: Option<Box<Node>>,
     right: Option<Box<Node>>,
-    contents: u32,
+    pub contents: u32,
 }
 
 impl Node {
@@ -40,13 +38,13 @@ impl PartialEq for Node {
 }
 
 #[derive(Debug)]
-enum TraversalOrder {
+pub enum TraversalOrder {
     PreOrder,
     InOrder,
     PostOrder,
 }
 
-struct NodeIterPre<'a> {
+pub struct NodeIterPre<'a> {
     stack: Vec<&'a Node>,
     order: TraversalOrder,
     node: Option<&'a Node>,
@@ -171,18 +169,7 @@ impl<'a> Iterator for NodeIterPre<'a> {
     }
 }
 
-// fn make_node() -> Node {
-//     let mut rng = Rng::from_seed(0);
-//     let mut root = Node { left: None, right: None, contents: 0 };
-//     let mut left = Node { left: None, right: None, contents: rng.rand_u32() };
-//     let mut right = Node { left: None, right: None, contents: rng.rand_u32() };
-//
-//     root.left = Some(left);
-//     root.right = Some(right);
-//     root
-// }
-//
-
+#[allow(dead_code)]
 fn make_tree() {
     let arr_tree = [[1, 2, 3],
         [2, 4, 5],
@@ -209,15 +196,17 @@ fn make_tree() {
             |n| print!("{:?} ", &n.contents)
         );
     }
-
-    // println!();
-    // println!("In-order");
-    // tree.iter(TraversalOrder::InOrder).for_each(
-    //     |n| println!("{:?}", &n.contents)
-    // );
 }
 
-fn main() {
-    println!("Hello, world!");
-    make_tree();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_base() {
+        println!("{}", 123);
+        make_tree();
+        assert_eq!(1, 1);
+    }
+
 }
