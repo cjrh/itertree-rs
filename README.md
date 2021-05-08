@@ -19,3 +19,10 @@ let visited: Vec<u32> = tree.iter(order).map(|n| n.contents).collect();
 println!("{:?}", &visited);
 // [1, 2, 4, 7, 5, 3, 6, 8, 9]
 ```
+
+## Credits
+
+My resources were 
+[this page on Rosetta Code](https://www.rosettacode.org/wiki/Tree_traversal#Rust),
+[this page on Wikipedia](https://en.wikipedia.org/wiki/Tree_traversal),
+and a great deal of head bashing against the Rust compiler.
